@@ -48,3 +48,17 @@ export const serverPatch = async (path, data) => {
 
   return res.json();
 };
+
+export const serverDelete = async (path) => {
+  const res = await fetch(`${baseurl}${path}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  
+  if (!res.ok) {
+    throw new Error(`Request Failed: ${res.status}`);
+  }
+  return res.json();
+};

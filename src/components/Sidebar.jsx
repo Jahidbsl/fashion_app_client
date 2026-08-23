@@ -8,9 +8,10 @@ import {
   Users,
   Menu,
   X,
-  ChartBarStacked
+  ChartBarStacked,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const SIDEBAR_LINKS = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -22,13 +23,8 @@ const SIDEBAR_LINKS = [
 ];
 
 const Sidebar = () => {
-  const [active, setActive] = useState(SIDEBAR_LINKS[0].href);
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleNavigate = (href) => () => {
-    setActive(href);
-    setMobileOpen(false);
-  };
 
   return (
     <>
@@ -74,12 +70,14 @@ const Sidebar = () => {
 
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
           {SIDEBAR_LINKS.map(({ label, href, icon: Icon }) => {
-            const isActive = active === href;
+            const isActive =
+              pathname === href ||
+              (href !== "/admin" && pathname?.startsWith(href));
             return (
               <Link
                 key={href}
                 href={href}
-                onClick={handleNavigate(href)}
+                onClick={() => setMobileOpen(false)}
                 aria-current={isActive ? "page" : undefined}
                 className={[
                   "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",

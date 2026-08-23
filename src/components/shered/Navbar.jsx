@@ -7,11 +7,16 @@ import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
+import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
+  const { cart } = useCart();
+
+  // Calculate total items in the cart
+  const totalCartItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -25,13 +30,13 @@ const Navbar = () => {
 
   const NAVLINKS = [
     { label: "Home", href: "/" },
-    { label: "Features", href: "/features" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "About", href: "/about" },
+    { label: "Products", href: "/products" },
+    { label: "Orders", href: "/orders" },
+    { label: "Cart", href: "/cart" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-default-200 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-default-200 bg-background/85 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand Logo / Name */}
         <Link
@@ -47,30 +52,31 @@ const Navbar = () => {
             <Link
               key={link.href}
               href={link.href}
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors flex items-center gap-2 relative group py-1"
             >
-              {link.label}
+              <span>{link.label}</span>
+              {link.href === "/cart" && totalCartItems > 0 && (
+                <span className="inline-flex items-center justify-center bg-foreground text-background text-[11px] font-extrabold px-2 py-0.5 rounded-full shadow-sm transition-transform group-hover:scale-105">
+                  {totalCartItems}
+                </span>
+              )}
             </Link>
           ))}
-
-   
         </nav>
 
-       
-
         {/* Actions & Theme Toggle & Mobile Menu Button */}
-        <div className="flex items-center gap-4 border-l-2 pl-10">
-                 {!isPending && !session ? (
+        <div className="flex items-center gap-4 border-l-2 pl-10 border-default-200">
+          {!isPending && !session ? (
             <>
               <Link
                 href="/signin"
-                className="hover:text-foreground transition-colors border-2 rounded-2xl p-2 w-22 text-center"
+                className="hover:text-foreground transition-colors border-2 border-default-200 rounded-2xl p-2 w-22 text-center text-sm font-medium"
               >
                 Sign In
               </Link>
               <Link
                 href="/signup"
-                className="hover:text-foreground transition-colors border-2 rounded-2xl p-2 w-22 text-center"
+                className="hover:text-foreground transition-colors border-2 border-default-200 rounded-2xl p-2 w-22 text-center text-sm font-medium"
               >
                 Register
               </Link>
@@ -80,7 +86,7 @@ const Navbar = () => {
               onClick={handleSignOut}
               variant="light"
               size="sm"
-              className="font-medium text-default-600 border-2 py-2 rounded-2xl hover:text-foreground min-w-0 bg-transparent h-auto data-[hover=true]:bg-transparent"
+              className="font-medium text-default-600 border-2 border-default-200 py-2 rounded-2xl hover:text-foreground min-w-0 bg-transparent h-auto data-[hover=true]:bg-transparent"
             >
               Sign Out
             </Button>
@@ -106,18 +112,21 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden border-t border-default-200 bg-background px-6 py-4 shadow-lg">
           <nav className="flex flex-col gap-4 text-sm font-medium text-default-600">
-            {NAVLINKS.link?.map
-              ? null
-              : NAVLINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="hover:text-foreground transition-colors py-1"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+            {NAVLINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="hover:text-foreground transition-colors py-1 flex items-center justify-between"
+              >
+                <span>{link.label}</span>
+                {link.href === "/cart" && totalCartItems > 0 && (
+                  <span className="inline-flex items-center justify-center bg-foreground text-background text-xs font-bold px-2 py-0.5 rounded-full">
+                    {totalCartItems}
+                  </span>
+                )}
+              </Link>
+            ))}
 
             <div className="border-t border-default-200 pt-4 flex flex-col gap-3">
               {!isPending && session?.user && (

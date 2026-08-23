@@ -1,9 +1,12 @@
 "use client";
-import { ThemeProvider } from "next-themes";
-export function Providers({ children}) {
+
+import * as React from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+
+export function Providers({ children }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light">
+    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
       {children}
-    </ThemeProvider>
+    </NextThemesProvider>
   );
 }
