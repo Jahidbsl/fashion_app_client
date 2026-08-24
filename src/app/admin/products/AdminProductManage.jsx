@@ -268,7 +268,7 @@ const AdminProductManage = ({ searchParams, productData, categoryList }) => {
                       <div className="flex items-center justify-center gap-2">
                         {/* View Button */}
                         <Link
-                          href={`/admin/products/${product._id}`}
+                          href={`/products/${product._id}`}
                           className="p-2 rounded-lg bg-default-100 hover:bg-default-200 transition-colors text-default-600 inline-flex items-center justify-center"
                           title="View Product"
                         >

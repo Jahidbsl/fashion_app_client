@@ -1,9 +1,9 @@
-import React from 'react';
+import AdminPanelComp from "@/components/AdminPanelComp";
 
 const AdminPanel = () => {
     return (
         <div>
-            <h1>Welcome To Admin panel</h1>
+            <AdminPanelComp/>
         </div>
     );
 };
